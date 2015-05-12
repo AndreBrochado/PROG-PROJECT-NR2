@@ -22,7 +22,13 @@ public:
     bool attack(size_t partNumber); //partNumber = {0,1,…, size-1}
     bool isDestroyed() const; // checks whether the ship is destroyed
     void show() const; // shows the attributes of the ship (for debugging)
-    char getOrientation();
+	unsigned int getColor() const;
+	char getOrientation() const;
+	const PositionInt& getPosition() const;
+	unsigned int getSize() const;
+	const std::string& getStatus() const;
+	char getSymbol() const;
+
 private:
     char symbol; // 'P' = "porta-aviões"; 'F' = "fragata"; … (Portuguese names)
     PositionInt position; // coordinates of the upper left corner of the ship
