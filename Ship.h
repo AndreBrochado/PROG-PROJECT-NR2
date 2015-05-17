@@ -29,6 +29,7 @@ public:
 	const std::string& getStatus() const;
 	char getSymbol() const;
 
+
 private:
     char symbol; // 'P' = "porta-aviões"; 'F' = "fragata"; … (Portuguese names)
     PositionInt position; // coordinates of the upper left corner of the ship
