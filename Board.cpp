@@ -4,6 +4,7 @@
 
 #include "Board.h"
 #include <fstream>
+#include <math.h>
 
 Board::Board(const std::string &filename) {
     std::ifstream inputFile;
@@ -13,7 +14,7 @@ Board::Board(const std::string &filename) {
     PositionChar tempPosition;
     unsigned int size, color;
     inputFile.open(fileName.c_str(), std::ios::in);  // inputFile.open(filename);
-    inputFile>>numLines>>dummy>>numColumns;
+	inputFile>>numLines>>dummy>>numColumns;
 
     while(!inputFile.eof()) {
         inputFile >> symbol >> size >> line >> column
@@ -102,3 +103,20 @@ void Board::moveShips(){
 			putShip(originalShip);
 	}
 }
+
+bool Board::attack(const Bomb &bomb) {
+	if (bomb.getTargetLineInt() > numLines - 1 || bomb.getTargetColumnInt() > numColumns - 1)
+		return false;
+	else if (board[bomb.getTargetLineInt()][bomb.getTargetColumnInt()] != -1) {
+		Ship hitShip = ships[board[bomb.getTargetLineInt()][bomb.getTargetColumnInt()]];
+		return hitShip.attack(getShipPart(hitShip, bomb.getTargetLineInt(), bomb.getTargetColumnInt()));
+	}
+}
+
+unsigned int Board::getShipPart(Ship ship, int line, int column){
+		int xDif, yDif;
+		yDif=line-ship.getPosition().line;
+		xDif=column-ship.getPosition().column; //One of the differences will always be 0 (as the bomb hits the ship, only one coordinate will change from the original position)
+		return (sqrt(xDif*xDif+yDif*yDif)); // so the distance will always be equal to the coordinate that is different from 0
+	}
+

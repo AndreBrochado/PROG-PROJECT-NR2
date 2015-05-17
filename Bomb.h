@@ -9,6 +9,9 @@ public:
 	Bomb(PositionChar targetPosition);
 	PositionChar getTargetPosition() const;
 	void show() const; // shows the attributes of the bomb (for debugging)
+	int getTargetColumnInt() const;
+	int getTargetLineInt() const;
+
 private:
 	char targetLine, targetColumn;
 };

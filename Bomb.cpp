@@ -19,3 +19,11 @@ PositionChar Bomb::getTargetPosition() const {
 void Bomb::show() const{
 	std::cout<<"line: "<<targetLine<<" column: "<<targetColumn<<std::endl;
 }
+
+int Bomb::getTargetColumnInt() const {
+	return (int)targetColumn -'a';
+}
+
+int Bomb::getTargetLineInt() const{
+	return (int)targetLine-'A';
+}

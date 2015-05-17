@@ -32,7 +32,9 @@ private:
 // (in the range 0..ships.size()-1) ;
 // -1 is used to represent the sea
 
+    unsigned int getShipPart(Ship ship, int line, int column);
 };
 
 
 #endif //BOARD_H_
+
