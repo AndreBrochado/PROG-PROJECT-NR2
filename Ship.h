@@ -35,7 +35,7 @@ private:
     char orientation; // 'H' = horizontal; 'V' = vertical
     unsigned int size; // number of cells occupied by the ship, on the board
     unsigned int color; // color code: o=BLACK, 1=BLUE, … (see annex of 1st proj.)
-   std::string status; // status[i]: upper case = good; lower case = damaged
+    std::string status; // status[i]: upper case = good; lower case = damaged
 // ex: "FFFF" means that the "fragata" is intact;
 // ex: "FFfF" means that the 'partNumber' 2 was hit by a bomb
 // OTHER ATTRIBUTES OR METHODS, if necessary

@@ -63,34 +63,26 @@ bool Ship::move(char direction, bool rotate, unsigned int lineMin, unsigned int 
 
 bool Ship::moveRand(unsigned int lineMin, unsigned int columnMin, unsigned int lineMax, unsigned int columnMax) {
 	bool rotate;
-	PositionInt newPosition;
-	newPosition.line = position.line;
-	newPosition.column = position.column;
-
 	if (rand() % 2 == 0)
 		rotate = true;
 	else
 		rotate = false;
 	switch (rand() % 5) {
 	case 0:
-		break;
+		return move('0', rotate, lineMin, columnMin, lineMax, columnMax);
 	case 1:
-		newPosition.line--; //direction 'N'
-		break;
+		return move('N', rotate, lineMin, columnMin, lineMax, columnMax);
 	case 2:
-		newPosition.line++; //direction 'S'
-		break;
+		return move('S', rotate, lineMin, columnMin, lineMax, columnMax);
 	case 3:
-		newPosition.column--; // direction 'W'
-		break;
+		return move('W', rotate, lineMin, columnMin, lineMax, columnMax);
 	case 4:
-		newPosition.column++; // direction 'E'
-		break;
+		return move('E', rotate, lineMin, columnMin, lineMax, columnMax);
 	default:
 		return false;
 	}
-
-	if ((orientation == 'V' && !rotate) || (orientation == 'H' && rotate)){
+}
+/*	if ((orientation == 'V' && !rotate) || (orientation == 'H' && rotate)){
 		if (newPosition.line + size-1 <= lineMax && newPosition.line >= lineMin && newPosition.column <= columnMax
 			&& newPosition.column >= columnMin) {
 			position.line = newPosition.line;
@@ -111,7 +103,7 @@ bool Ship::moveRand(unsigned int lineMin, unsigned int columnMin, unsigned int l
 
 	return false;
 
-}
+*/
 
 bool Ship::attack(size_t partNumber) {
 	if (partNumber > size - 1)

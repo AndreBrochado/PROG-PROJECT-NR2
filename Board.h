@@ -13,6 +13,7 @@
 
 class Board {
 public:
+
     Board(const std::string &filename); // loads board from file 'filename'
     bool putShip(const Ship &ship); // adds ship to the board, if possible
     void moveShips(); // tries to randomly move all the ships of the fleet
@@ -21,10 +22,12 @@ public:
     void display() const; // displays the colored board during the game
     void show() const; // shows the attributes of the board (for debugging)
     bool isValidPosition(const Ship ship);
+    unsigned int getShipPart(Ship ship, int line, int column) const;
 // OTHER METHODS, if necessary
 // ...
 private:
-    unsigned int numLines, numColumns; // redundant info …
+    unsigned int numLines, numColumns;// redundant info …
+    Ship removeShip(size_t index);
     std::vector <Ship> ships; // ships that are placed on the board
     std::vector <std::vector <int> > board; // each element indicates
 // the index of a ship in the 'ships' vector

@@ -9,4 +9,4 @@ set(SOURCE_FILES
     projecto.cpp
     Utilities.h)
 
-add_executable(ProgProjectnr2 ${SOURCE_FILES} Ship.cpp Ship.h Board.cpp Board.h)
+add_executable(ProgProjectnr2 ${SOURCE_FILES} Ship.cpp Ship.h Board.cpp Board.h Player.cpp Player.h)

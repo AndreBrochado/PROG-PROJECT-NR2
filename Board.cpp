@@ -4,6 +4,8 @@
 
 #include "Board.h"
 #include <fstream>
+#include <iomanip>
+#include <math.h>
 
 Board::Board(const std::string &filename) {
     std::ifstream inputFile;
@@ -12,7 +14,7 @@ Board::Board(const std::string &filename) {
     char symbol, line, column, orientation;
     PositionChar tempPosition;
     unsigned int size, color;
-    inputFile.open(fileName);
+    inputFile.open(fileName.c_str(), std::ios::in);  // inputFile.open(filename);
     inputFile>>numLines>>dummy>>numColumns;
 
     while(!inputFile.eof()) {
@@ -79,4 +81,74 @@ bool Board::putShip(const Ship &ship){
 	}
 	else
 		return false;
+}
+
+Ship Board::removeShip(size_t index) {
+	for(size_t j = 0; index<ships[index].getSize(); j++){
+		if(ships[index].getOrientation()== 'V')
+			board[ships[index].getPosition().line+j][ships[index].getPosition().column] = -1;
+		else
+			board[ships[index].getPosition().line][ships[index].getPosition().column+j] = -1;
+	}
+		Ship removedShip = ships[index];
+		ships.erase(ships.begin()+index);
+	return removedShip;
+}
+
+void Board::moveShips(){
+	for(size_t i = 0; i< ships.size(); i++){
+		Ship originalShip = removeShip(0);
+		Ship testShip = originalShip;
+		testShip.moveRand(0, 0, numLines-1, numColumns-1);
+		if(!putShip(testShip))
+			putShip(originalShip);
+	}
+}
+
+void Board::display() const {
+	std::cout << " ";
+	setColor(15, 0);
+	for (size_t k = 0; k < numLines	; k++) {
+		std::cout << std::setw(2) << char('a' + k);
+	}
+	std::cout << std::endl;
+
+	for (size_t i = 0; i < numLines; i++) {
+		for (size_t j = 0; j < numColumns; j++) {
+			if (j == 0) {
+				setColor(15, 0);
+				std::cout << char('A' + i);
+			}
+			if (board[i][j] == -1) {
+				setColor(9, 7);
+				std::cout << std::setw(2) << '.';
+			}
+			else {
+				setColor(ships[board[i][j]].getColor(), 7);
+				std::cout << std::setw(2) << ships[board[i][j]].getStatus()[getShipPart(ships[board[i][j]], i, j)];
+			}
+		}
+		std::cout << std::endl;
+	}
+	setColor(15, 0);
+}
+
+void Board::show() const {
+	std::cout<<"Board size: "<<numLines<<"x"<<numColumns<<" (LxC)"<<std::endl; //TO BE CONTINUED
+	}
+
+bool Board::attack(const Bomb &bomb) {
+	if (bomb.getTargetLineInt() > numLines - 1 || bomb.getTargetColumnInt() > numColumns - 1)
+		return false;
+	else if (board[bomb.getTargetLineInt()][bomb.getTargetColumnInt()] != -1) {
+		Ship hitShip = ships[board[bomb.getTargetLineInt()][bomb.getTargetColumnInt()]];
+		return hitShip.attack(getShipPart(hitShip, bomb.getTargetLineInt(), bomb.getTargetColumnInt()));
+	}
+}
+
+unsigned int Board::getShipPart(Ship ship, int line, int column) const {
+	int xDif, yDif;
+	yDif=line-ship.getPosition().line;
+	xDif=column-ship.getPosition().column; //One of the differences will always be 0 (as the bomb hits the ship, only one coordinate will change from the original position)
+	return (unsigned int) (sqrt(xDif*xDif+yDif*yDif)); // so the distance will always be equal to the coordinate that is different from 0
 }
