@@ -122,10 +122,7 @@ bool Ship::isDestroyed() const {
 		else
 			upper++;
 	}
-	if(lower>=upper)
-		return true;
-	else
-		return false;
+	return lower>=upper ? true : false;
 }
 
 void Ship::show() const{

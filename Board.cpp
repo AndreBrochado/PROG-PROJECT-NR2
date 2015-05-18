@@ -4,10 +4,7 @@
 
 #include "Board.h"
 #include <fstream>
-<<<<<<< HEAD
 #include <iomanip>
-=======
->>>>>>> 3e0d94d20bccc9960d6fcbda265cc8a14efadaab
 #include <math.h>
 
 Board::Board(const std::string &filename) {
@@ -108,7 +105,6 @@ void Board::moveShips(){
 	}
 }
 
-<<<<<<< HEAD
 void Board::display() const {
 	std::cout << " ";
 	setColor(15, 0);
@@ -141,8 +137,6 @@ void Board::show() const {
 	std::cout<<"Board size: "<<numLines<<"x"<<numColumns<<" (LxC)"<<std::endl; //TO BE CONTINUED
 	}
 
-=======
->>>>>>> 3e0d94d20bccc9960d6fcbda265cc8a14efadaab
 bool Board::attack(const Bomb &bomb) {
 	if (bomb.getTargetLineInt() > numLines - 1 || bomb.getTargetColumnInt() > numColumns - 1)
 		return false;
@@ -152,19 +146,16 @@ bool Board::attack(const Bomb &bomb) {
 	}
 }
 
-<<<<<<< HEAD
 unsigned int Board::getShipPart(Ship ship, int line, int column) const {
 	int xDif, yDif;
 	yDif=line-ship.getPosition().line;
 	xDif=column-ship.getPosition().column; //One of the differences will always be 0 (as the bomb hits the ship, only one coordinate will change from the original position)
 	return (unsigned int) (sqrt(xDif*xDif+yDif*yDif)); // so the distance will always be equal to the coordinate that is different from 0
 }
-=======
+
 unsigned int Board::getShipPart(Ship ship, int line, int column){
 		int xDif, yDif;
 		yDif=line-ship.getPosition().line;
 		xDif=column-ship.getPosition().column; //One of the differences will always be 0 (as the bomb hits the ship, only one coordinate will change from the original position)
-		return (sqrt(xDif*xDif+yDif*yDif)); // so the distance will always be equal to the coordinate that is different from 0
+		return (unsigned int) (sqrt(xDif*xDif+yDif*yDif)); // so the distance will always be equal to the coordinate that is different from 0
 	}
-
->>>>>>> 3e0d94d20bccc9960d6fcbda265cc8a14efadaab

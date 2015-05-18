@@ -20,7 +20,6 @@ void Bomb::show() const{
 	std::cout<<"line: "<<targetLine<<" column: "<<targetColumn<<std::endl;
 }
 
-<<<<<<< HEAD
 int Bomb::getTargetLineInt() const {
 	return targetLine-'A';
 }
@@ -28,13 +27,3 @@ int Bomb::getTargetLineInt() const {
 int Bomb::getTargetColumnInt() const {
 	return targetColumn-'a';
 }
-
-=======
-int Bomb::getTargetColumnInt() const {
-	return (int)targetColumn -'a';
-}
-
-int Bomb::getTargetLineInt() const{
-	return (int)targetLine-'A';
-}
->>>>>>> 3e0d94d20bccc9960d6fcbda265cc8a14efadaab

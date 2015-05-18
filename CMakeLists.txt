@@ -4,9 +4,15 @@ project(ProgProjectnr2)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 set(SOURCE_FILES
+    Board.cpp
+    Board.h
     Bomb.cpp
     Bomb.h
+    Player.cpp
+    Player.h
     projecto.cpp
+    Ship.cpp
+    Ship.h
     Utilities.h)
 
-add_executable(ProgProjectnr2 ${SOURCE_FILES} Ship.cpp Ship.h Board.cpp Board.h Player.cpp Player.h)
+add_executable(ProgProjectnr2 ${SOURCE_FILES})
