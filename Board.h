@@ -25,6 +25,13 @@ public:
     unsigned int getShipPart(Ship ship, int line, int column) const;
 // OTHER METHODS, if necessary
 // ...
+    unsigned int getNumLines() const {
+        return numLines;
+    }
+    unsigned int getNumColumns() const {
+        return numColumns;
+    }
+
 private:
     unsigned int numLines, numColumns;// redundant info …
     Ship removeShip(size_t index);
@@ -33,8 +40,6 @@ private:
 // the index of a ship in the 'ships' vector
 // (in the range 0..ships.size()-1) ;
 // -1 is used to represent the sea
-
-    unsigned int getShipPart(Ship ship, int line, int column);
 };
 
 

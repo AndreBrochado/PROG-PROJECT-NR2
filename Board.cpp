@@ -144,6 +144,7 @@ bool Board::attack(const Bomb &bomb) {
 		Ship hitShip = ships[board[bomb.getTargetLineInt()][bomb.getTargetColumnInt()]];
 		return hitShip.attack(getShipPart(hitShip, bomb.getTargetLineInt(), bomb.getTargetColumnInt()));
 	}
+	return true;
 }
 
 unsigned int Board::getShipPart(Ship ship, int line, int column) const {
@@ -152,10 +153,3 @@ unsigned int Board::getShipPart(Ship ship, int line, int column) const {
 	xDif=column-ship.getPosition().column; //One of the differences will always be 0 (as the bomb hits the ship, only one coordinate will change from the original position)
 	return (unsigned int) (sqrt(xDif*xDif+yDif*yDif)); // so the distance will always be equal to the coordinate that is different from 0
 }
-
-unsigned int Board::getShipPart(Ship ship, int line, int column){
-		int xDif, yDif;
-		yDif=line-ship.getPosition().line;
-		xDif=column-ship.getPosition().column; //One of the differences will always be 0 (as the bomb hits the ship, only one coordinate will change from the original position)
-		return (unsigned int) (sqrt(xDif*xDif+yDif*yDif)); // so the distance will always be equal to the coordinate that is different from 0
-	}
