@@ -7,6 +7,10 @@
 #include <iomanip>
 #include <math.h>
 
+Board::Board() {
+	numColumns = numLines = 0;
+}
+
 Board::Board(const std::string &filename) {
     std::ifstream inputFile;
 	std::string fileName;
@@ -14,7 +18,7 @@ Board::Board(const std::string &filename) {
     char symbol, line, column, orientation;
     PositionChar tempPosition;
     unsigned int size, color;
-    inputFile.open(fileName.c_str(), std::ios::in);  // inputFile.open(filename);
+    inputFile.open(fileName);
 	inputFile>>numLines>>dummy>>numColumns;
 
     while(!inputFile.eof()) {
@@ -152,4 +156,12 @@ unsigned int Board::getShipPart(Ship ship, int line, int column) const {
 	yDif=line-ship.getPosition().line;
 	xDif=column-ship.getPosition().column; //One of the differences will always be 0 (as the bomb hits the ship, only one coordinate will change from the original position)
 	return (unsigned int) (sqrt(xDif*xDif+yDif*yDif)); // so the distance will always be equal to the coordinate that is different from 0
+}
+
+unsigned int Board::getNumLines() const {
+	return numLines;
+}
+
+unsigned int Board::getNumColumns() const {
+	return numColumns;
 }

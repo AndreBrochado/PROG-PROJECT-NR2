@@ -13,7 +13,7 @@
 
 class Board {
 public:
-
+    Board();
     Board(const std::string &filename); // loads board from file 'filename'
     bool putShip(const Ship &ship); // adds ship to the board, if possible
     void moveShips(); // tries to randomly move all the ships of the fleet
@@ -25,12 +25,11 @@ public:
     unsigned int getShipPart(Ship ship, int line, int column) const;
 // OTHER METHODS, if necessary
 // ...
-    unsigned int getNumLines() const {
-        return numLines;
-    }
-    unsigned int getNumColumns() const {
-        return numColumns;
-    }
+
+
+    unsigned int getNumLines() const;
+
+    unsigned int getNumColumns() const;
 
 private:
     unsigned int numLines, numColumns;// redundant info …

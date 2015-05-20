@@ -8,7 +8,6 @@ Bomb::Bomb(PositionChar targetPosition) {
 	targetColumn = targetPosition.column + rand()%3 - 1;
 }
 
-
 PositionChar Bomb::getTargetPosition() const {
 	PositionChar temp;
 	temp.line = targetLine;

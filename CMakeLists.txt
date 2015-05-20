@@ -18,4 +18,4 @@ set(SOURCE_FILES
     Ship.h
     Utilities.h)
 
-add_executable(Projecto_2_PROG ${SOURCE_FILES})
+add_executable(Projecto_2_PROG ${SOURCE_FILES} Utilities.cpp)

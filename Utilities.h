@@ -21,19 +21,9 @@ struct PositionInt // to store a board position in unsig. integer format
 };
 
 // Set text color & background
-static void setColor(unsigned int color, unsigned int background_color) {
-	HANDLE hCon = GetStdHandle(STD_OUTPUT_HANDLE);
-	if (background_color == 0)
-		SetConsoleTextAttribute(hCon, color);
-	else
-		SetConsoleTextAttribute(hCon, color | BACKGROUND_BLUE | BACKGROUND_GREEN |
-									  BACKGROUND_RED);
-}
+void setColor(unsigned int color, unsigned int background_color);
 
 // Set text color
-static void setColor(unsigned int color) {
-	HANDLE hcon = GetStdHandle(STD_OUTPUT_HANDLE);
-	SetConsoleTextAttribute(hcon, color);
-}
+void setColor(unsigned int color);
 
 #endif /* UTILITIES_H_ */
