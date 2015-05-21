@@ -16,7 +16,10 @@ public:
     void showBoard() const; // shows the player’s board
     Bomb getBomb() const; // asks bomb target coordinates and creates the bomb
     void attackBoard(const Bomb &bomb);
-    std::string getName() const;// "receives" a bomb from the opponent;
+    std::string getName() const;
+	Board getBoard() const;
+	
+	// "receives" a bomb from the opponent;
 // updates own board taking into account the damages
 // caused by the bomb; BEFORE THAT… moves the ships
 private:

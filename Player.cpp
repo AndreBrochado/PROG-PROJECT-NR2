@@ -31,3 +31,7 @@ void Player::attackBoard(const Bomb &bomb) {
 std::string Player::getName() const {
     return name;
 }
+
+Board Player::getBoard() const {
+	return board;
+}

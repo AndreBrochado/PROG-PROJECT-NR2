@@ -20,6 +20,9 @@ public:
     bool attack(const Bomb &b);
 
     void display() const; // displays the colored board during the game
+
+	//void operator<<(template <class T>) const;
+
     void show() const; // shows the attributes of the board (for debugging)
     bool isValidPosition(const Ship ship);
     unsigned int getShipPart(Ship ship, int line, int column) const;

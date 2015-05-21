@@ -1,4 +1,3 @@
-//just for old time sake
 #include<iostream>
 #include <time.h>
 #include <stdlib.h>
@@ -6,6 +5,16 @@
 #include "Player.h"
 
 using namespace std;
+
+bool makePlay(Player &activePlayer, Player &passivePlayer){
+	cout << activePlayer.getName() << "'s turn:" << endl;
+	cout << "Your opponent's board: " << endl;
+	cout << passivePlayer.getBoard().display;
+	passivePlayer.attackBoard(activePlayer.getBomb());
+	
+	
+}
+
 
 bool readString(const string &prompt, string &returnString) {
     string testString;
