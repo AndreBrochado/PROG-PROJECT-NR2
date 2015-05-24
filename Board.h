@@ -21,6 +21,7 @@ public:
     std::vector<Ship> getShipList() const;
     std::vector<std::vector<int>> getBoard();
     Ship removeShip(size_t index);
+    void refreshBoard();
     void display() const; // displays the colored board during the game
 
 	friend std::ostream& operator<<(std::ostream& outputStream, const Board &board);

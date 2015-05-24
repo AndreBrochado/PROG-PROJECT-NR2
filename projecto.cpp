@@ -4,16 +4,28 @@
 #include <stdio.h>
 #include <fstream>
 #include <sstream>
+#include <algorithm>
 #include "Player.h"
 
 using namespace std;
 
+struct scoreLine {
+    string playerName;
+    float score;
+    int numLines, numColumns;
+    int shipArea;
+};
+
 void makePlay(Player &activePlayer, Player &passivePlayer) {
+    time_t initTime, finalTime;
+    time(&initTime);
     cout << activePlayer.getName() << "'s turn:" << endl;
     cout << "Your opponent's board: " << endl;
-    passivePlayer.getBoard().display();
+    cout << passivePlayer.getBoard();
     passivePlayer.attackBoard(activePlayer.getBomb());
     cout << passivePlayer.getBoard();
+    time(&finalTime);
+    activePlayer.incPlayTime(finalTime-initTime);
 }
 
 bool readString(const string &prompt, string &returnString) {
@@ -57,28 +69,38 @@ bool getPlayerData(string &playerName, string &fileName) {
     return true;
 }
 
-string numToString(float number) {
-    ostringstream convert;   // stream used for the conversion
-    convert << number;      // insert the textual representation of 'Number' in the characters in the stream
-    return convert.str();
-}
-
-void saveHighScore(Player &winner, float score, int scorePlace) {
+void saveHighScore(Player &winner, Player &loser, float score, int scorePlace) {
+    char dummy;
     ifstream oldScores;
-    string scoreSaver = "";
+    scoreLine tempLine;
+    vector<scoreLine> scoresList;
     ofstream newScores;
     oldScores.open("Top10 Scores.txt");
     for (int i = 0; i < 10; i++) {
-        if (i == scorePlace)
-            scoreSaver +=
-                    winner.getName() + " " + numToString(score) + " " + numToString(winner.getBoard().getNumLines()) + "x" +
-                    numToString(winner.getBoard().getNumColumns()) + numToString(winner.getShipArea()) + "\n";
-        else
-            getline(oldScores, scoreSaver);
+        if (i == scorePlace) {
+            tempLine.playerName = winner.getName();
+            tempLine.score = score;
+            tempLine.numLines = loser.getBoard().getNumLines();
+            tempLine.numColumns = loser.getBoard().getNumColumns();
+            tempLine.shipArea = loser.getShipArea();
+        }
+        else {
+            getline(oldScores, tempLine.playerName, ':');
+            if (!(tempLine.playerName == "")) {
+                oldScores >> dummy >> tempLine.score >> tempLine.numLines >> dummy >> tempLine.numColumns >>
+                tempLine.shipArea;
+            }
+            else
+                break;
+        }
+            scoresList.push_back(tempLine);
     }
     oldScores.close();
     newScores.open("Top10 Scores.txt");
-    newScores<<scoreSaver;
+    for (int i = 0; i < min((int)scoresList.size(), 10); i++) {
+        newScores << scoresList[i].playerName << ": " << scoresList[i].score << " " << scoresList[i].numLines << "x" <<
+        scoresList[i].numColumns << " " << scoresList[i].shipArea << endl;
+    }
     newScores.close();
 }
 
@@ -87,10 +109,14 @@ void createTextFile(string fileName) {
     outputStream.open(fileName);
 }
 
-void printHighscores(){
+void printHighscores() {
     ifstream scores;
+    string line;
     scores.open("Top10 Scores.txt");
-    cout<<endl<<scores;
+    cout << endl;
+    while(getline(scores, line)){
+        cout<< line << endl;
+    }
 }
 
 int scorePlace(float score) {
@@ -103,20 +129,25 @@ int scorePlace(float score) {
         highScoresFile.open("Top10 Scores.txt", ios::in);
     }
     for (int i = 0; i < 10; i++) {
-        if (highScoresFile.eof())
+        getline(highScoresFile, dummyString, ':');
+        if (dummyString=="")
             return i;
-        highScoresFile >> dummyString >> oldScore >> dummyString >> dummyString;
-        if (score > oldScore)
-            return i;
+        else {
+            highScoresFile >> oldScore >> dummyString >> dummyString;
+            highScoresFile.ignore(1000, '\n');
+            if (score < oldScore)
+                return i;
+        }
     }
+    highScoresFile.close();
     return -1;
 }
 
 int main() {
     srand(time(NULL));
-    time_t initTime, finalTime, gameTime;
+    char showScores;
     int player;
-    Player winningPlayer;
+    Player winningPlayer, losingPlayer;
     float score;
     std::string playerName, fileName;
 
@@ -124,6 +155,7 @@ int main() {
     Player Player1(playerName, fileName);
     getPlayerData(playerName, fileName);
     Player Player2(playerName, fileName);
+
 
     cout << "Let's see who plays first:" << endl;
     player = rand() % 2;
@@ -133,26 +165,33 @@ int main() {
     else
         cout << Player2.getName() << " wins the coin toss and plays first!" << endl;
 
-    initTime = time(NULL);
-    while (!Player1.wonGame(Player2) || !Player2.wonGame(Player1)) {
+    while (!(Player1.wonGame(Player2) || Player2.wonGame(Player1))) {
         if (player == 0)
             makePlay(Player1, Player2);
         else
             makePlay(Player2, Player1);
         player = (player + 1) % 2;
     }
-    finalTime = time(NULL);
-    Player1.wonGame(Player2) ? winningPlayer = Player1 : winningPlayer = Player2;
-    gameTime = finalTime - initTime;
-    score = gameTime * Player1.getShipArea() / Player1.getBoardArea();
-    if(scorePlace(score)!=-1) {
-        cout<<"Congratulations, "<< winningPlayer.getName() <<"! You won and your score was one of the top10! "<<endl;
-        saveHighScore(winningPlayer, score, scorePlace(score));
+    if (Player1.wonGame(Player2)) {
+            winningPlayer = Player1;
+            losingPlayer = Player2;
+    }
+    else {
+        winningPlayer = Player2;
+        losingPlayer = Player1;
+    }
+    score = winningPlayer.getPlayTime() * (float) winningPlayer.getShipArea() / (float) winningPlayer.getBoardArea();
+    if (scorePlace(score) != -1) {
+        cout << "Congratulations, " << winningPlayer.getName() << "! You won and your score was one of the top10! " <<
+        endl;
+        saveHighScore(winningPlayer, losingPlayer, score, scorePlace(score));
     }
     else
-        cout<<"Congratulations, "<<winningPlayer.getName() <<", you won! But, sadly, you didn't make it to top10 score! :("<<endl;
-    cout<<"Do you wish to see the top10 scores? <Y for yes, N for no> ";
-    if(getchar()=='Y')
+        cout << "Congratulations, " << winningPlayer.getName() <<
+        ", you won! But, sadly, you didn't make it to top10 score! :(" << endl;
+    cout << "Do you wish to see the top10 scores? <Y for yes, N for no> ";
+    cin >> showScores;
+    if(showScores == 'Y')
         printHighscores();
 
     system("pause");

@@ -13,6 +13,7 @@ Player::Player(std::string &playerName, std::string &boardFilename) {
     for(size_t i = 0; i<board.getShipList().size(); i++){
         shipArea += board.getShipList()[i].getSize();
     }
+    playTime = 0;
 }
 
 void Player::showBoard() const {
@@ -29,11 +30,14 @@ Bomb Player::getBomb() const {
 }
 
 void Player::attackBoard(const Bomb &bomb) {
-   // board.moveShips();
-    if(board.attack(bomb)) {
+  //  board.moveShips();
+    if (board.attack(bomb)) {
         int hitShipIndex = board.getBoard()[bomb.getTargetLineInt()][bomb.getTargetColumnInt()];
-        if(board.getShipList()[hitShipIndex].isDestroyed())
-            board.removeShip((unsigned int)board.getBoard()[board.getShipList()[hitShipIndex].getPosition().line][board.getShipList()[hitShipIndex].getPosition().column]);
+        if (board.getShipList()[hitShipIndex].isDestroyed()) {
+            board.removeShip(
+                    (unsigned int) board.getBoard()[board.getShipList()[hitShipIndex].getPosition().line][board.getShipList()[hitShipIndex].getPosition().column]);
+            board.refreshBoard();
+        }
     }
 }
 
@@ -59,4 +63,12 @@ int Player::getBoardArea() const {
 
 Player::Player() {
 
+}
+
+time_t Player::getPlayTime() const {
+    return playTime;
+}
+
+void Player::incPlayTime(time_t increment) {
+    playTime = playTime + increment;
 }

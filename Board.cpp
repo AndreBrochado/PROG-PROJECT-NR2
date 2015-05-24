@@ -141,8 +141,10 @@ void Board::show() const {
 	}
 
 bool Board::attack(const Bomb &bomb) {
-	if (bomb.getTargetLineInt() > numLines - 1 || bomb.getTargetColumnInt() > numColumns - 1)
+	if (bomb.getTargetLineInt() > numLines - 1 || bomb.getTargetColumnInt() > numColumns - 1) {
+		std::cout<<"You failed, your bomb fell out of the board, bitch!"<<std::endl;
 		return false;
+	}
 	else if (board[bomb.getTargetLineInt()][bomb.getTargetColumnInt()] != -1) {
 		Ship* hitShip = &ships[board[bomb.getTargetLineInt()][bomb.getTargetColumnInt()]];
 		std::cout<<"You hit on: "<<bomb.getTargetPosition().line<<bomb.getTargetPosition().column<<std::endl;
@@ -192,14 +194,63 @@ std::ostream& operator<<(std::ostream& outputStream, const Board& board){
 			if (board.board[i][j] == -1) {
 				setColor(9, 7);
 				outputStream << std::setw(2) << '.';
+				setColor(15,0);
 			}
 			else {
 				setColor(board.ships[board.board[i][j]].getColor(), 7);
 				outputStream << std::setw(2) << board.ships[board.board[i][j]].getStatus()[board.getShipPart(board.ships[board.board[i][j]], i, j)];
+				setColor(15,0);
 			}
 		}
 		outputStream << std::endl;
 	}
-	setColor(15, 0);
 	return outputStream;
+ }
+
+/*std::ostream&  operator<< (std::ostream &outputStream, const Board &board) {
+	setColor(15,0);
+	outputStream << " ";
+	for (int k = 0; k < board.numColumns; k++){
+		outputStream << std::setw(2) << char ('a'+k);
+	}
+
+	outputStream << std::endl;
+
+	for (unsigned int i = 0; i < board.board.size(); i++) {
+		outputStream << char('A'+i);
+		for (unsigned int j = 0; j < board.board[i].size(); j++) {
+			if (board.board[i][j] == -1) {
+				setColor(9, 7);
+				outputStream << std::setw(2) << '.';
+				setColor(15, 0);
+			}
+			else {
+				Ship ship = board.ships[board.board[i][j]];
+				setColor(ship.getColor(), 7);
+
+				if (ship.getOrientation() == 'H') {
+					int index = j - ship.getPosition().column;
+					std::string status = ship.getStatus();
+					outputStream << std::setw(2) << status[index];
+					setColor(7, 0);
+				}
+				else {
+					int index = i - ship.getPosition().line;
+					std::string status = ship.getStatus();
+					outputStream << std::setw(2) << status[index];
+					setColor(7, 0);
+				}
+
+			}
+		}
+		outputStream << std::endl;
+	}
+	return outputStream;
+}*/
+
+void Board::refreshBoard() {
+	for(size_t i = 0; i< ships.size(); i++){
+		Ship ship = removeShip(0);
+		putShip(ship, i);
+	}
 }

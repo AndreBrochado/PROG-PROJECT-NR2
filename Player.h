@@ -22,6 +22,8 @@ public:
 	Board getBoard() const;
     int getShipArea() const;
     int getBoardArea() const;
+    time_t getPlayTime() const;
+    void incPlayTime(time_t increment);
 
 	
 	// "receives" a bomb from the opponent;
@@ -31,6 +33,7 @@ private:
     int shipArea, boardArea;
     std::string name; // name of the player
     Board board; // board of the player
+    time_t playTime;
     // updates own board taking into account the damages
     // caused by the bomb; BEFORE THAT… moves the ships
 };
