@@ -5,19 +5,19 @@
 #include <stdlib.h>
 #include "Ship.h"
 
-Ship::Ship(char symbol, PositionChar position, char orientation, unsigned int size, unsigned int color) {
+Ship::Ship(char symbol, Position<char> position, char orientation, unsigned int size, unsigned int color) {
 	this->symbol = symbol;
-	this->position.line = (unsigned int) position.line - 'A';
-	this->position.column = (unsigned int) position.column - 'a';
+	this->position.line = (unsigned int) (position.line - 'A');
+	this->position.column = (unsigned int) (position.column - 'a');
 	this->orientation = orientation;
 	this->size = size;
 	this->color = color;
-	status = std::string(symbol, size);
+	status = std::string(size, symbol);
 }
 
 bool Ship::move(char direction, bool rotate, unsigned int lineMin, unsigned int columnMin, unsigned int lineMax,
 		unsigned int columnMax) {
-	PositionInt newPosition;
+	Position<int> newPosition;
 	newPosition.line = position.line;
 	newPosition.column = position.column;
 	switch (direction) {
@@ -82,34 +82,12 @@ bool Ship::moveRand(unsigned int lineMin, unsigned int columnMin, unsigned int l
 		return false;
 	}
 }
-/*	if ((orientation == 'V' && !rotate) || (orientation == 'H' && rotate)){
-		if (newPosition.line + size-1 <= lineMax && newPosition.line >= lineMin && newPosition.column <= columnMax
-			&& newPosition.column >= columnMin) {
-			position.line = newPosition.line;
-			position.column = newPosition.column;
-			orientation = 'V';
-			return true;
-		}
-	}
-	else
-	if ((orientation == 'H' && !rotate) || (orientation == 'V' && rotate))
-	if (newPosition.line >= lineMin && newPosition.line <= lineMax && newPosition.column + size-1 <= columnMax
-		&& newPosition.column >= columnMin) {
-		position.line = newPosition.line;
-		position.column = newPosition.column;
-		orientation = 'H';
-		return true;
-	}
-
-	return false;
-
-*/
 
 bool Ship::attack(size_t partNumber) {
 	if (partNumber > size - 1)
 		return false;
 	else {
-		status[partNumber] = (char) tolower(status[partNumber]);
+		status[partNumber] = char (tolower(status[partNumber]));
 		return true;
 	}
 }
@@ -122,7 +100,7 @@ bool Ship::isDestroyed() const {
 		else
 			upper++;
 	}
-	return lower>=upper ? true : false;
+	return lower>=upper;
 }
 
 void Ship::show() const{
@@ -140,7 +118,7 @@ char Ship:: getOrientation() const {
 	return orientation;
 }
 
-const PositionInt& Ship::getPosition() const {
+const Position<int> Ship::getPosition() const {
 	return position;
 }
 

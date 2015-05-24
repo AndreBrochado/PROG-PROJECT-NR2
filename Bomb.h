@@ -6,8 +6,8 @@
 class Bomb
 {
 public:
-	Bomb(PositionChar targetPosition);
-	PositionChar getTargetPosition() const;
+	Bomb(Position<char> targetPosition);
+	Position<char> getTargetPosition() const;
 	void show() const; // shows the attributes of the bomb (for debugging)
 	int getTargetLineInt() const;
 	int getTargetColumnInt() const;

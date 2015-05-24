@@ -13,12 +13,11 @@ Board::Board() {
 
 Board::Board(const std::string &filename) {
     std::ifstream inputFile;
-	std::string fileName;
     char dummy;
     char symbol, line, column, orientation;
-    PositionChar tempPosition;
+    Position<char> tempPosition;
     unsigned int size, color;
-    inputFile.open(fileName);
+    inputFile.open(filename);
 	inputFile>>numLines>>dummy>>numColumns;
 
     while(!inputFile.eof()) {
@@ -34,9 +33,9 @@ Board::Board(const std::string &filename) {
     for(size_t i=0; i<ships.size(); i++){
     	for(size_t j = 0; j<ships[i].getSize(); j++){
         if(ships[i].getOrientation()== 'V')
-        	board[ships[i].getPosition().line+j][ships[i].getPosition().column] = i;
+        	table[ships[i].getPosition().line+j][ships[i].getPosition().column] = i;
         else
-        	board[ships[i].getPosition().line][ships[i].getPosition().column+j] = i;
+        	table[ships[i].getPosition().line][ships[i].getPosition().column+j] = i;
         }
     }
 	board = table;
@@ -70,16 +69,16 @@ bool Board::isValidPosition(const Ship ship) {
 	return true;
 }
 
-bool Board::putShip(const Ship &ship){
+bool Board::putShip(const Ship &ship, unsigned int index){ // fix
 	if(isValidPosition(ship)){
 		ships.push_back(ship);
 		if (ship.getOrientation() == 'V')
-			for (size_t i = ship.getPosition().line; i < ship.getPosition().line + ship.getSize(); i++) {
-				board[i][ship.getPosition().column] = ships.size()-1; //index of the recently added ship
+			for (int i = ship.getPosition().line; i < ship.getPosition().line + ship.getSize(); i++) {
+				board[i][ship.getPosition().column] = index; //index of the recently added ship
 			}
 		else
-			for (size_t i = ship.getPosition().column; i < ship.getPosition().column + ship.getSize(); i++) {
-				board[ship.getPosition().line][i] = ships.size()-1; //index of the recently added ship
+			for (int i = ship.getPosition().column; i < ship.getPosition().column + ship.getSize(); i++) {
+				board[ship.getPosition().line][i] = index; //index of the recently added ship
 			}
 		return true;
 	}
@@ -87,8 +86,8 @@ bool Board::putShip(const Ship &ship){
 		return false;
 }
 
-Ship Board::removeShip(size_t index) {
-	for(size_t j = 0; index<ships[index].getSize(); j++){
+Ship Board::removeShip(size_t index) { //fix
+	for(size_t j = 0; j<ships[index].getSize(); j++){ //for(size_t j = 0; index<ships[index].getSize(); j++){
 		if(ships[index].getOrientation()== 'V')
 			board[ships[index].getPosition().line+j][ships[index].getPosition().column] = -1;
 		else
@@ -99,13 +98,13 @@ Ship Board::removeShip(size_t index) {
 	return removedShip;
 }
 
-void Board::moveShips(){
+void Board::moveShips(){ //fix
 	for(size_t i = 0; i< ships.size(); i++){
 		Ship originalShip = removeShip(0);
 		Ship testShip = originalShip;
 		testShip.moveRand(0, 0, numLines-1, numColumns-1);
-		if(!putShip(testShip))
-			putShip(originalShip);
+		if(!putShip(testShip, i))
+			putShip(originalShip, i);
 	}
 }
 
@@ -145,10 +144,12 @@ bool Board::attack(const Bomb &bomb) {
 	if (bomb.getTargetLineInt() > numLines - 1 || bomb.getTargetColumnInt() > numColumns - 1)
 		return false;
 	else if (board[bomb.getTargetLineInt()][bomb.getTargetColumnInt()] != -1) {
-		Ship hitShip = ships[board[bomb.getTargetLineInt()][bomb.getTargetColumnInt()]];
-		return hitShip.attack(getShipPart(hitShip, bomb.getTargetLineInt(), bomb.getTargetColumnInt()));
+		Ship* hitShip = &ships[board[bomb.getTargetLineInt()][bomb.getTargetColumnInt()]];
+		std::cout<<"You hit on: "<<bomb.getTargetPosition().line<<bomb.getTargetPosition().column<<std::endl;
+		return hitShip->attack(getShipPart(*hitShip, bomb.getTargetLineInt(), bomb.getTargetColumnInt()));
 	}
-	return true;
+		std::cout<<"You failed, your bomb hit: "<<bomb.getTargetPosition().line<<bomb.getTargetPosition().column<<std::endl; //DEBUG
+		return false;
 }
 
 unsigned int Board::getShipPart(Ship ship, int line, int column) const {
@@ -164,4 +165,41 @@ unsigned int Board::getNumLines() const {
 
 unsigned int Board::getNumColumns() const {
 	return numColumns;
+}
+
+std::vector<Ship> Board::getShipList() const{
+	return ships;
+}
+
+std::vector<std::vector<int>> Board::getBoard() {
+	return board;
+}
+
+std::ostream& operator<<(std::ostream& outputStream, const Board& board){
+	outputStream << " ";
+	setColor(15, 0);
+	for (size_t k = 0; k < board.numLines	; k++) {
+		outputStream << std::setw(2) << char ('a' + k);
+	}
+	outputStream << std::endl;
+
+	for (size_t i = 0; i < board.numLines; i++) {
+		for (size_t j = 0; j < board.numColumns; j++) {
+			if (j == 0) {
+				setColor(15, 0);
+				outputStream << char ('A' + i);
+			}
+			if (board.board[i][j] == -1) {
+				setColor(9, 7);
+				outputStream << std::setw(2) << '.';
+			}
+			else {
+				setColor(board.ships[board.board[i][j]].getColor(), 7);
+				outputStream << std::setw(2) << board.ships[board.board[i][j]].getStatus()[board.getShipPart(board.ships[board.board[i][j]], i, j)];
+			}
+		}
+		outputStream << std::endl;
+	}
+	setColor(15, 0);
+	return outputStream;
 }

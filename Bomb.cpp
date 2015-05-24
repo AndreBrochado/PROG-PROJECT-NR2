@@ -3,13 +3,13 @@
 #include <iostream>
 #include <cstdlib>
 
-Bomb::Bomb(PositionChar targetPosition) {
-	targetLine = targetPosition.line + rand()%3 -1;
-	targetColumn = targetPosition.column + rand()%3 - 1;
+Bomb::Bomb(Position<char> targetPosition) {
+	targetLine = (char) (targetPosition.line);// + rand()%3 -1);
+	targetColumn = (char) (targetPosition.column); //+ rand()%3 - 1);
 }
 
-PositionChar Bomb::getTargetPosition() const {
-	PositionChar temp;
+Position<char> Bomb::getTargetPosition() const {
+	Position<char> temp;
 	temp.line = targetLine;
 	temp.column = targetColumn;
 	return temp;

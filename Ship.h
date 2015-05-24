@@ -11,7 +11,7 @@
 
 class Ship {
 public:
-    Ship(char symbol, PositionChar position, char orientation, unsigned int size, unsigned int color);
+    Ship(char symbol, Position<char> position, char orientation, unsigned int size, unsigned int color);
 
 // OTHER METHODS, if necessary
 // ...
@@ -24,7 +24,7 @@ public:
     void show() const; // shows the attributes of the ship (for debugging)
 	unsigned int getColor() const;
 	char getOrientation() const;
-	const PositionInt& getPosition() const;
+	const Position<int> getPosition() const;
 	unsigned int getSize() const;
 	const std::string& getStatus() const;
 	char getSymbol() const;
@@ -32,7 +32,7 @@ public:
 
 private:
     char symbol; // 'P' = "porta-aviões"; 'F' = "fragata"; … (Portuguese names)
-    PositionInt position; // coordinates of the upper left corner of the ship
+    Position<int> position; // coordinates of the upper left corner of the ship
     char orientation; // 'H' = horizontal; 'V' = vertical
     unsigned int size; // number of cells occupied by the ship, on the board
     unsigned int color; // color code: o=BLACK, 1=BLUE, … (see annex of 1st proj.)
