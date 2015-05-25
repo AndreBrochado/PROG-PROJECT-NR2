@@ -15,6 +15,7 @@ public:
     Player();
     Player(std::string &playerName, std::string &boardFilename);
     void showBoard() const; // shows the player’s board
+    bool getCoordinates (std::string &inputString, int numLines, int numColumns)const;
     Bomb getBomb() const; // asks bomb target coordinates and creates the bomb
     void attackBoard(const Bomb &bomb);
     bool wonGame(Player &opponent);

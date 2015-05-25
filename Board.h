@@ -23,18 +23,14 @@ public:
     Ship removeShip(size_t index);
     void refreshBoard();
     void display() const; // displays the colored board during the game
-
-	friend std::ostream& operator<<(std::ostream& outputStream, const Board &board);
-
     void show() const; // shows the attributes of the board (for debugging)
     bool isValidPosition(const Ship ship);
     unsigned int getShipPart(Ship ship, int line, int column) const;
-// OTHER METHODS, if necessary
-// ...
+    friend std::ostream& operator<<(std::ostream& outputStream, const Board &board);
 
+    //getters
 
     unsigned int getNumLines() const;
-
     unsigned int getNumColumns() const;
 
 

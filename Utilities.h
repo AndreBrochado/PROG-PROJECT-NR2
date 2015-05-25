@@ -24,4 +24,6 @@ void setColor(unsigned int color, unsigned int background_color);
 // Set text color
 void setColor(unsigned int color);
 
+
+
 #endif /* UTILITIES_H_ */

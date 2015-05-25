@@ -69,7 +69,7 @@ bool Board::isValidPosition(const Ship ship) {
 	return true;
 }
 
-bool Board::putShip(const Ship &ship, unsigned int index){ // fix
+bool Board::putShip(const Ship &ship, unsigned int index){
 	if(isValidPosition(ship)){
 		ships.push_back(ship);
 		if (ship.getOrientation() == 'V')
@@ -86,8 +86,8 @@ bool Board::putShip(const Ship &ship, unsigned int index){ // fix
 		return false;
 }
 
-Ship Board::removeShip(size_t index) { //fix
-	for(size_t j = 0; j<ships[index].getSize(); j++){ //for(size_t j = 0; index<ships[index].getSize(); j++){
+Ship Board::removeShip(size_t index) {
+	for(size_t j = 0; j<ships[index].getSize(); j++){
 		if(ships[index].getOrientation()== 'V')
 			board[ships[index].getPosition().line+j][ships[index].getPosition().column] = -1;
 		else
@@ -136,21 +136,23 @@ void Board::display() const {
 	setColor(15, 0);
 }
 
-void Board::show() const {
-	std::cout<<"Board size: "<<numLines<<"x"<<numColumns<<" (LxC)"<<std::endl; //TO BE CONTINUED
-	}
-
 bool Board::attack(const Bomb &bomb) {
 	if (bomb.getTargetLineInt() > numLines - 1 || bomb.getTargetColumnInt() > numColumns - 1) {
-		std::cout<<"You failed, your bomb fell out of the board, bitch!"<<std::endl;
+		setColor(12);
+		std::cout<<"Your bomb fell out of the board!"<<std::endl;
+		setColor(15);
 		return false;
 	}
 	else if (board[bomb.getTargetLineInt()][bomb.getTargetColumnInt()] != -1) {
 		Ship* hitShip = &ships[board[bomb.getTargetLineInt()][bomb.getTargetColumnInt()]];
-		std::cout<<"You hit on: "<<bomb.getTargetPosition().line<<bomb.getTargetPosition().column<<std::endl;
+		setColor(10);
+		std::cout<<"Your bomb hit a ship on: "<<bomb.getTargetPosition().line<<bomb.getTargetPosition().column<<std::endl;
+		setColor(15);
 		return hitShip->attack(getShipPart(*hitShip, bomb.getTargetLineInt(), bomb.getTargetColumnInt()));
 	}
+		setColor(12);
 		std::cout<<"You failed, your bomb hit: "<<bomb.getTargetPosition().line<<bomb.getTargetPosition().column<<std::endl; //DEBUG
+		setColor(15);
 		return false;
 }
 
@@ -161,20 +163,11 @@ unsigned int Board::getShipPart(Ship ship, int line, int column) const {
 	return (unsigned int) (sqrt(xDif*xDif+yDif*yDif)); // so the distance will always be equal to the coordinate that is different from 0
 }
 
-unsigned int Board::getNumLines() const {
-	return numLines;
-}
-
-unsigned int Board::getNumColumns() const {
-	return numColumns;
-}
-
-std::vector<Ship> Board::getShipList() const{
-	return ships;
-}
-
-std::vector<std::vector<int>> Board::getBoard() {
-	return board;
+void Board::refreshBoard() {
+	for(size_t i = 0; i< ships.size(); i++){
+		Ship ship = removeShip(0);
+		putShip(ship, i);
+	}
 }
 
 std::ostream& operator<<(std::ostream& outputStream, const Board& board){
@@ -204,53 +197,26 @@ std::ostream& operator<<(std::ostream& outputStream, const Board& board){
 		}
 		outputStream << std::endl;
 	}
+	outputStream << std::endl;
 	return outputStream;
  }
 
-/*std::ostream&  operator<< (std::ostream &outputStream, const Board &board) {
-	setColor(15,0);
-	outputStream << " ";
-	for (int k = 0; k < board.numColumns; k++){
-		outputStream << std::setw(2) << char ('a'+k);
-	}
+void Board::show() const {
+	std::cout<<"Board size: "<<numLines<<"x"<<numColumns<<" (LxC)"<<std::endl; //TO BE CONTINUED
+}
 
-	outputStream << std::endl;
+unsigned int Board::getNumLines() const {
+	return numLines;
+}
 
-	for (unsigned int i = 0; i < board.board.size(); i++) {
-		outputStream << char('A'+i);
-		for (unsigned int j = 0; j < board.board[i].size(); j++) {
-			if (board.board[i][j] == -1) {
-				setColor(9, 7);
-				outputStream << std::setw(2) << '.';
-				setColor(15, 0);
-			}
-			else {
-				Ship ship = board.ships[board.board[i][j]];
-				setColor(ship.getColor(), 7);
+unsigned int Board::getNumColumns() const {
+	return numColumns;
+}
 
-				if (ship.getOrientation() == 'H') {
-					int index = j - ship.getPosition().column;
-					std::string status = ship.getStatus();
-					outputStream << std::setw(2) << status[index];
-					setColor(7, 0);
-				}
-				else {
-					int index = i - ship.getPosition().line;
-					std::string status = ship.getStatus();
-					outputStream << std::setw(2) << status[index];
-					setColor(7, 0);
-				}
+std::vector<Ship> Board::getShipList() const{
+	return ships;
+}
 
-			}
-		}
-		outputStream << std::endl;
-	}
-	return outputStream;
-}*/
-
-void Board::refreshBoard() {
-	for(size_t i = 0; i< ships.size(); i++){
-		Ship ship = removeShip(0);
-		putShip(ship, i);
-	}
+std::vector<std::vector<int>> Board::getBoard() {
+	return board;
 }

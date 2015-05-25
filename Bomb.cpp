@@ -4,8 +4,8 @@
 #include <cstdlib>
 
 Bomb::Bomb(Position<char> targetPosition) {
-	targetLine = (char) (targetPosition.line); //+ rand()%3 -1);
-	targetColumn = (char)  (targetPosition.column); //+ rand()%3 - 1);
+	targetLine = (char) (targetPosition.line + rand()%3 -1);
+	targetColumn = (char)  (targetPosition.column + rand()%3 - 1);
 }
 
 Position<char> Bomb::getTargetPosition() const {

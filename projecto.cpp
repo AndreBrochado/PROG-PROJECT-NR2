@@ -1,10 +1,10 @@
+
 #include<iostream>
 #include <time.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <fstream>
-#include <sstream>
-#include <algorithm>
+#include <iomanip>
 #include "Player.h"
 
 using namespace std;
@@ -19,12 +19,18 @@ struct scoreLine {
 void makePlay(Player &activePlayer, Player &passivePlayer) {
     time_t initTime, finalTime;
     time(&initTime);
-    cout << activePlayer.getName() << "'s turn:" << endl;
+    setColor(3);
+    cout << activePlayer.getName();
+    setColor(15,0);
+    cout <<  "'s turn:" << endl;
+    cout << endl;
     cout << "Your opponent's board: " << endl;
     cout << passivePlayer.getBoard();
+    cout << endl;
     passivePlayer.attackBoard(activePlayer.getBomb());
     cout << passivePlayer.getBoard();
     time(&finalTime);
+
     activePlayer.incPlayTime(finalTime-initTime);
 }
 
@@ -102,7 +108,7 @@ void saveHighScore(Player &winner, Player &loser, float score, int scorePlace) {
     for (int i = 0; i < min((int)scoresList.size(), 10); i++) {
         if(i!=0)
             newScores<<endl;
-        newScores << scoresList[i].playerName << ": " << scoresList[i].score << " " << scoresList[i].numLines << "x" <<
+        newScores  << scoresList[i].playerName << ": " << scoresList[i].score << " " << scoresList[i].numLines << "x" <<
         scoresList[i].numColumns << " " << scoresList[i].shipArea;
     }
     newScores.close();
@@ -111,13 +117,14 @@ void saveHighScore(Player &winner, Player &loser, float score, int scorePlace) {
 void createTextFile(string fileName) {
     ofstream outputStream;
     outputStream.open(fileName);
+    outputStream.close();
 }
 
 void printHighscores() {
     ifstream scores;
     string line;
     scores.open("Top10 Scores.txt");
-    cout << endl;
+    cout << endl <<"(Name: Score Board Dim. Ships area)"<<endl;
     while(getline(scores, line)){
         cout<< line << endl;
     }
@@ -138,7 +145,7 @@ int scorePlace(float score) {
         if (dummyString=="")
             return i;
         else {
-            highScoresFile >> oldScore >> dummyString >> dummyString;
+            highScoresFile >> oldScore;
             highScoresFile.ignore(1000, '\n');
             if (score < oldScore)
                 return i;
@@ -150,11 +157,11 @@ int scorePlace(float score) {
 
 int main() {
     srand(time(NULL));
-    char showScores;
     int player;
     Player winningPlayer, losingPlayer;
     float score;
-    std::string playerName, fileName;
+    string playerName, fileName;
+    string showScores;
 
     getPlayerData(playerName, fileName);
     Player Player1(playerName, fileName);
@@ -164,10 +171,17 @@ int main() {
     cout << "Let's see who plays first:" << endl;
     player = rand() % 2;
     if (player == 0) {
-        cout << Player1.getName() << " wins the coin toss and plays first!" << endl;
+        setColor(3);
+        cout << Player1.getName() ;
+        setColor(15,0);
+        cout << " wins the coin toss and plays first!" << endl;
+
     }
-    else
+    else {
         cout << Player2.getName() << " wins the coin toss and plays first!" << endl;
+
+    }
+
 
     while (!(Player1.wonGame(Player2) || Player2.wonGame(Player1))) {
         if (player == 0)
@@ -184,7 +198,7 @@ int main() {
         winningPlayer = Player2;
         losingPlayer = Player1;
     }
-    score = winningPlayer.getPlayTime() * (float) winningPlayer.getShipArea() / (float) winningPlayer.getBoardArea();
+    score = winningPlayer.getPlayTime() * (float) losingPlayer.getShipArea() / (float) losingPlayer.getBoardArea();
     if (scorePlace(score) != -1) {
         cout << "Congratulations, " << winningPlayer.getName() << "! You won and your score was one of the top10! " <<
         endl;
@@ -193,11 +207,9 @@ int main() {
     else
         cout << "Congratulations, " << winningPlayer.getName() <<
         ", you won! But, sadly, you didn't make it to top10 score! :(" << endl;
-    cout << "Do you wish to see the top10 scores? <Y for yes, N for no> ";
-    cin >> showScores;
-    if(showScores == 'Y')
+    readString("Do you wish to see the top10 scores? <Y for yes, Any other key for No> ", showScores);
+    if(showScores == "Y")
         printHighscores();
-
     system("pause");
 
     return 0;
