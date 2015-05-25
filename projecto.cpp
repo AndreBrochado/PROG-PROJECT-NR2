@@ -85,10 +85,12 @@ void saveHighScore(Player &winner, Player &loser, float score, int scorePlace) {
             tempLine.shipArea = loser.getShipArea();
         }
         else {
+            tempLine.playerName = "";
             getline(oldScores, tempLine.playerName, ':');
             if (!(tempLine.playerName == "")) {
-                oldScores >> dummy >> tempLine.score >> tempLine.numLines >> dummy >> tempLine.numColumns >>
+                oldScores >> tempLine.score >> tempLine.numLines >> dummy >> tempLine.numColumns >>
                 tempLine.shipArea;
+                oldScores.ignore(1000, '\n');
             }
             else
                 break;
@@ -98,8 +100,10 @@ void saveHighScore(Player &winner, Player &loser, float score, int scorePlace) {
     oldScores.close();
     newScores.open("Top10 Scores.txt");
     for (int i = 0; i < min((int)scoresList.size(), 10); i++) {
+        if(i!=0)
+            newScores<<endl;
         newScores << scoresList[i].playerName << ": " << scoresList[i].score << " " << scoresList[i].numLines << "x" <<
-        scoresList[i].numColumns << " " << scoresList[i].shipArea << endl;
+        scoresList[i].numColumns << " " << scoresList[i].shipArea;
     }
     newScores.close();
 }
@@ -129,6 +133,7 @@ int scorePlace(float score) {
         highScoresFile.open("Top10 Scores.txt", ios::in);
     }
     for (int i = 0; i < 10; i++) {
+        dummyString = "";
         getline(highScoresFile, dummyString, ':');
         if (dummyString=="")
             return i;
@@ -155,7 +160,6 @@ int main() {
     Player Player1(playerName, fileName);
     getPlayerData(playerName, fileName);
     Player Player2(playerName, fileName);
-
 
     cout << "Let's see who plays first:" << endl;
     player = rand() % 2;
